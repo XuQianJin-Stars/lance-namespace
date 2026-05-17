@@ -98,16 +98,21 @@ PYTHON_MODEL_CLASSES: dict[str, str] = {}
 #      producing for each operation:
 #         * a list of ``Param(name, AbstractType, optional)``
 #         * an ``AbstractType`` for the success branch of the Result
-#   2. ``FIXTURES[op][param_name]`` provides the *value* a contract test should
-#      pass for each non-optional parameter.  Optional (``Option<T>``) params
-#      default to absent unless an explicit fixture is supplied.
+#   2. ``_fixture_for(op, param)`` resolves the *value* a contract test
+#      should pass for each parameter via OVERRIDES (explicit, ≤ 1 entry
+#      today, defined in ``ci/cts/fixtures.py``) → schema-driven default
+#      derived from the Rust signature and generated model metadata.
+#      Optional (``Option<T>``) params with no override default to absent.
 #   3. ``render_call_<lang>(op)`` emits the appropriate call expression by
-#      pairing the parsed signature with FIXTURES, using language-specific
-#      rules for literals, model constructors and ``None``/``null``/``None``.
+#      pairing the parsed signature with resolved fixtures, using
+#      language-specific rules for literals, model constructors and
+#      ``None``/``null``/omitted-kwarg.
 #
 # When the spec grows a new parameter, only the Rust client has to be
-# regenerated; the contract generator inherits the new shape automatically.
-# Only the fixture value (if mandatory) needs to be added.
+# regenerated; the contract generator inherits the new shape and the new
+# parameter's default value automatically.  An explicit entry is needed
+# only when a spec constraint (e.g. ``minItems``) is not encoded in the
+# Rust type system.
 # ---------------------------------------------------------------------------
 
 
@@ -293,258 +298,29 @@ def _scan_rust_signatures(
 
 
 # ---------------------------------------------------------------------------
-# Central fixture table: (op, param_name) → AbstractValue
+# Per-(operation, parameter) fixture resolution
 # ---------------------------------------------------------------------------
 #
-# Each entry is the *abstract* value for a parameter — language renderers
-# turn it into the appropriate literal/constructor.  Supported shapes:
+# Fixture values are no longer hand-maintained.  ``_fixture_for(op, param)``
+# resolves the abstract value for each call site via this fallback chain:
 #
-#   * Plain Python scalars: ``str``, ``int``, ``float``, ``bool``, ``bytes``,
-#     ``dict`` (only str→str), or ``list`` (empty list literal).
-#   * ``ModelValue(class_name, kwargs)`` — instantiates a generated model with
-#     a kwargs dict of nested ``AbstractValue`` entries.  Used both for the
-#     top-level body parameter and for any nested object fields.
+#   1. ``OVERRIDES[op][param]`` from ``ci/cts/fixtures.py`` -- explicit
+#      override needed for spec constraints the Rust client cannot express
+#      (e.g. OpenAPI ``minItems``).
+#   2. ``default_value_for_param(...)`` -- derives a type-appropriate value
+#      from the Rust signature plus the generated model metadata
+#      (``_MODEL_REQUIRED`` / ``_MODEL_FIELDS``).  Strings default to ``""``,
+#      integers to ``0``, models recurse into their own required fields, and
+#      so on.  Optional ``Option<T>`` parameters with no override still
+#      default to absent -- derivation only fires for required parameters.
 #
-# Optional Rust ``Option<T>`` params with no fixture entry default to absent
-# (``None``/``null``/Python kwarg omitted).
+# Concrete values do not need to be human-meaningful: WireMock currently
+# matches path params with ``[^/]+`` wildcards and does not validate request
+# bodies, so any value of the right shape satisfies the contract harness.
 # ---------------------------------------------------------------------------
 
 
-class ModelValue:
-    """A nested model literal, e.g. ``QueryTableRequest(k=1, vector=...)``."""
-
-    __slots__ = ("class_name", "kwargs")
-
-    def __init__(self, class_name: str, **kwargs: object) -> None:
-        self.class_name = class_name
-        self.kwargs = kwargs
-
-
-# Shorthand for inline fixture readability.
-_ID_NS = "ns_existing"
-_ID_NS_WITH = "ns_with_tables"
-_ID_TBL = "test_ns.test_table"
-_ID_TBL_ALPHA = "ns_with_tables.table_alpha"
-_ID_TXN = "test_txn"
-
-# Reusable nested query-vector fixture (single-vector branch of the oneOf).
-_QUERY_VECTOR = ModelValue("QueryTableRequestVector", single_vector=[0.1])
-
-FIXTURES: dict[str, dict[str, object]] = {
-    "ListNamespaces": {"id": "$"},
-    "CreateNamespace": {
-        "id": "test_ns",
-        "create_namespace_request": ModelValue("CreateNamespaceRequest"),
-    },
-    "DescribeNamespace": {
-        "id": _ID_NS,
-        "describe_namespace_request": ModelValue("DescribeNamespaceRequest"),
-    },
-    "DropNamespace": {
-        "id": _ID_NS,
-        "drop_namespace_request": ModelValue("DropNamespaceRequest"),
-    },
-    "NamespaceExists": {
-        "id": _ID_NS,
-        "namespace_exists_request": ModelValue("NamespaceExistsRequest"),
-    },
-    "ListTables": {"id": _ID_NS_WITH},
-    "ListAllTables": {},
-    "CreateTable": {"id": _ID_TBL, "body": b""},
-    "DescribeTable": {
-        "id": _ID_TBL_ALPHA,
-        "describe_table_request": ModelValue("DescribeTableRequest"),
-    },
-    "DropTable": {"id": _ID_TBL},
-    "TableExists": {
-        "id": _ID_TBL_ALPHA,
-        "table_exists_request": ModelValue("TableExistsRequest"),
-    },
-    "DeclareTable": {
-        "id": _ID_TBL,
-        "declare_table_request": ModelValue("DeclareTableRequest"),
-    },
-    "DeregisterTable": {
-        "id": _ID_TBL,
-        "deregister_table_request": ModelValue("DeregisterTableRequest"),
-    },
-    "RegisterTable": {
-        "id": _ID_TBL,
-        "register_table_request": ModelValue(
-            "RegisterTableRequest", location="s3://bucket/path"
-        ),
-    },
-    "RenameTable": {
-        "id": _ID_TBL,
-        "rename_table_request": ModelValue(
-            "RenameTableRequest", new_table_name="new_name"
-        ),
-    },
-    "RestoreTable": {
-        "id": _ID_TBL,
-        "restore_table_request": ModelValue("RestoreTableRequest", version=1),
-    },
-    "GetTableStats": {
-        "id": _ID_TBL,
-        "get_table_stats_request": ModelValue("GetTableStatsRequest"),
-    },
-    "DescribeTableVersion": {
-        "id": _ID_TBL,
-        "describe_table_version_request": ModelValue("DescribeTableVersionRequest"),
-    },
-    "ListTableVersions": {"id": _ID_TBL},
-    "CreateTableVersion": {
-        "id": _ID_TBL,
-        "create_table_version_request": ModelValue(
-            "CreateTableVersionRequest", version=1, manifest_path="manifest_path"
-        ),
-    },
-    "BatchCreateTableVersions": {
-        "batch_create_table_versions_request": ModelValue(
-            "BatchCreateTableVersionsRequest", entries=[]
-        )
-    },
-    "BatchDeleteTableVersions": {
-        "id": _ID_TBL,
-        "batch_delete_table_versions_request": ModelValue(
-            "BatchDeleteTableVersionsRequest", ranges=[]
-        ),
-    },
-    "ListTableIndices": {
-        "id": _ID_TBL,
-        "list_table_indices_request": ModelValue("ListTableIndicesRequest"),
-    },
-    "CreateTableIndex": {
-        "id": _ID_TBL,
-        "create_table_index_request": ModelValue(
-            "CreateTableIndexRequest", column="col", index_type="IVF_PQ"
-        ),
-    },
-    "CreateTableScalarIndex": {
-        "id": _ID_TBL,
-        "create_table_index_request": ModelValue(
-            "CreateTableIndexRequest", column="col", index_type="BTREE"
-        ),
-    },
-    "DropTableIndex": {"id": _ID_TBL, "index_name": "idx"},
-    "DescribeTableIndexStats": {
-        "id": _ID_TBL,
-        "index_name": "idx",
-        "describe_table_index_stats_request": ModelValue(
-            "DescribeTableIndexStatsRequest"
-        ),
-    },
-    "ListTableTags": {"id": _ID_TBL},
-    "CreateTableTag": {
-        "id": _ID_TBL,
-        "create_table_tag_request": ModelValue(
-            "CreateTableTagRequest", tag="v1", version=1
-        ),
-    },
-    "GetTableTagVersion": {
-        "id": _ID_TBL,
-        "get_table_tag_version_request": ModelValue(
-            "GetTableTagVersionRequest", tag="v1"
-        ),
-    },
-    "UpdateTableTag": {
-        "id": _ID_TBL,
-        "update_table_tag_request": ModelValue(
-            "UpdateTableTagRequest", tag="v1", version=2
-        ),
-    },
-    "DeleteTableTag": {
-        "id": _ID_TBL,
-        "delete_table_tag_request": ModelValue("DeleteTableTagRequest", tag="v1"),
-    },
-    "InsertIntoTable": {"id": _ID_TBL, "body": b""},
-    "DeleteFromTable": {
-        "id": _ID_TBL,
-        "delete_from_table_request": ModelValue(
-            "DeleteFromTableRequest", predicate="id = 1"
-        ),
-    },
-    "UpdateTable": {
-        "id": _ID_TBL,
-        "update_table_request": ModelValue("UpdateTableRequest", updates=[]),
-    },
-    "MergeInsertIntoTable": {"id": _ID_TBL, "on": "id", "body": b""},
-    "CountTableRows": {
-        "id": _ID_TBL,
-        "count_table_rows_request": ModelValue("CountTableRowsRequest"),
-    },
-    "QueryTable": {
-        "id": _ID_TBL,
-        "query_table_request": ModelValue(
-            "QueryTableRequest", k=1, vector=_QUERY_VECTOR
-        ),
-    },
-    "AnalyzeTableQueryPlan": {
-        "id": _ID_TBL,
-        "analyze_table_query_plan_request": ModelValue(
-            "AnalyzeTableQueryPlanRequest", k=1, vector=_QUERY_VECTOR
-        ),
-    },
-    "ExplainTableQueryPlan": {
-        "id": _ID_TBL,
-        "explain_table_query_plan_request": ModelValue(
-            "ExplainTableQueryPlanRequest",
-            query=ModelValue("QueryTableRequest", k=1, vector=_QUERY_VECTOR),
-        ),
-    },
-    "AlterTableAddColumns": {
-        "id": _ID_TBL,
-        "alter_table_add_columns_request": ModelValue(
-            "AlterTableAddColumnsRequest", new_columns=[]
-        ),
-    },
-    "AlterTableAlterColumns": {
-        "id": _ID_TBL,
-        "alter_table_alter_columns_request": ModelValue(
-            "AlterTableAlterColumnsRequest", alterations=[]
-        ),
-    },
-    "AlterTableDropColumns": {
-        "id": _ID_TBL,
-        "alter_table_drop_columns_request": ModelValue(
-            "AlterTableDropColumnsRequest", columns=[]
-        ),
-    },
-    "AlterTableBackfillColumns": {
-        "id": _ID_TBL,
-        "alter_table_backfill_columns_request": ModelValue(
-            "AlterTableBackfillColumnsRequest", column="col"
-        ),
-    },
-    "UpdateTableSchemaMetadata": {"id": _ID_TBL, "request_body": {}},
-    # RefreshMaterializedView's body parameter is Option<Model> — supply it
-    # explicitly so renderers wrap it in the right per-language container.
-    "RefreshMaterializedView": {
-        "id": _ID_TBL,
-        "refresh_materialized_view_request": ModelValue(
-            "RefreshMaterializedViewRequest"
-        ),
-    },
-    "AlterTransaction": {
-        "id": _ID_TXN,
-        "alter_transaction_request": ModelValue(
-            "AlterTransactionRequest",
-            # Spec requires minItems=1 on actions; supply a single empty
-            # AlterTransactionAction (all fields optional) so the request
-            # validates without committing to any specific action variant.
-            actions=[ModelValue("AlterTransactionAction")],
-        ),
-    },
-    "BatchCommitTables": {
-        "batch_commit_tables_request": ModelValue(
-            "BatchCommitTablesRequest", operations=[]
-        )
-    },
-    "DescribeTransaction": {
-        "id": _ID_TXN,
-        "describe_transaction_request": ModelValue("DescribeTransactionRequest"),
-    },
-}
+from fixtures import ModelValue, OVERRIDES, default_value_for_param  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -553,27 +329,52 @@ FIXTURES: dict[str, dict[str, object]] = {
 #
 # Implementation note: each renderer walks the parsed Rust signature in order
 # and emits one positional argument (Rust, Java) or kwarg (Python) per param.
-# The shared ``FIXTURES`` table provides values; missing entries surface as a
-# generator error (so the contributor sees exactly which (op, param) needs a
-# fixture, rather than silently producing a broken test).
+# ``_fixture_for`` (below) provides each value via OVERRIDES → schema-aware
+# default, so renderers never see ``None`` for a required parameter unless
+# the auto-derivation has explicitly given up (which surfaces as a clear
+# generator error).
 # ---------------------------------------------------------------------------
 
 
 def _fixture_for(op: str, param: Param) -> object | None:
-    """Look up the fixture value for ``(op, param.name)``.
+    """Return the abstract fixture value for ``(op, param.name)``.
 
-    Returns ``None`` when no fixture is registered.  Optional parameters with
-    no fixture default to absent; required parameters with no fixture raise
-    via the caller.
+    Resolution order:
+
+    1. ``OVERRIDES[op][param.name]`` — explicit override from
+       ``ci/cts/fixtures.py``.  Used only when the auto-derived default
+       would violate a spec constraint the Rust client cannot express
+       (e.g. ``minItems``) or when a downstream WireMock matcher needs a
+       specific literal value.
+    2. ``default_value_for_param(...)`` — type-appropriate default derived
+       from the parameter's ``AbstractType`` and, for ``MODEL`` kinds,
+       from the generated model's required-field list.  Recurses through
+       nested models so every required field arrives populated.
+
+    Returns ``None`` only for optional parameters with no override —
+    callers translate that into ``None``/``null``/omitted-kwarg per
+    language.  Required parameters always resolve to a real value.
     """
-    return FIXTURES.get(op, {}).get(param.name)
+    override = OVERRIDES.get(op, {}).get(param.name)
+    if override is not None:
+        return override
+    if param.optional:
+        # Skip default derivation for ``Option<T>`` slots: leaving them
+        # absent yields the smallest possible contract test request and
+        # mirrors the previous behaviour for optional params with no
+        # FIXTURES entry.
+        return None
+    return default_value_for_param(
+        param.type.kind, param.type.model, _MODEL_REQUIRED, _MODEL_FIELDS
+    )
 
 
 def _missing_fixture(op: str, param: Param) -> SystemExit:
     return SystemExit(
         f"ERROR: missing fixture for required parameter "
         f"'{param.name}' of operation '{op}'. "
-        f"Add an entry to FIXTURES['{op}']."
+        f"Add an entry to OVERRIDES['{op}'] in ci/cts/fixtures.py "
+        "or extend default_value_for_param() to cover the parameter type."
     )
 
 
@@ -1472,7 +1273,7 @@ def discover_api_classification(repo_root: Path) -> None:
     PYTHON_MODEL_CLASSES.clear()
     PYTHON_MODEL_CLASSES.update(_scan_python_models(python_models_dir))
 
-    # Drives FIXTURES → call-expression synthesis for all three languages.
+    # Drives _fixture_for → call-expression synthesis for all three languages.
     OPERATIONS.clear()
     OPERATIONS.update(_scan_rust_signatures(rust_dir))
 
@@ -1860,12 +1661,13 @@ _JAVA_CLIENT_PACKAGES: dict[str, dict[str, str]] = {
 
 
 def _collect_java_model_imports(model_pkg: str) -> list[str]:
-    """Collect every Java model class referenced from a FIXTURES entry.
+    """Collect every Java model class referenced by a resolved fixture value.
 
-    Walks the ``FIXTURES`` table (including nested ``ModelValue`` payloads)
-    and records the PascalCase class names so we can emit the matching
-    ``import <model_pkg>.<Class>;`` lines without a parallel hardcoded
-    list.
+    Walks the resolved fixture for *every* (op, param) — covering both
+    ``OVERRIDES`` and the schema-driven defaults emitted by
+    ``default_value_for_param`` — and records the PascalCase class names so
+    we can emit the matching ``import <model_pkg>.<Class>;`` lines without
+    a parallel hardcoded list.
     """
     seen: set[str] = set()
 
@@ -1881,9 +1683,9 @@ def _collect_java_model_imports(model_pkg: str) -> list[str]:
             for x in v.values():
                 visit(x)
 
-    for params in FIXTURES.values():
-        for value in params.values():
-            visit(value)
+    for op, (params, _ret) in OPERATIONS.items():
+        for p in params:
+            visit(_fixture_for(op, p))
     return sorted(f"{model_pkg}.{c}" for c in seen)
 
 

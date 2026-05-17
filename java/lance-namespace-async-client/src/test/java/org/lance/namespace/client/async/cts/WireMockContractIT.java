@@ -51,7 +51,6 @@ import org.lance.namespace.model.ListTableIndicesRequest;
 import org.lance.namespace.model.NamespaceExistsRequest;
 import org.lance.namespace.model.QueryTableRequest;
 import org.lance.namespace.model.QueryTableRequestVector;
-import org.lance.namespace.model.RefreshMaterializedViewRequest;
 import org.lance.namespace.model.RegisterTableRequest;
 import org.lance.namespace.model.RenameTableRequest;
 import org.lance.namespace.model.RestoreTableRequest;
@@ -103,9 +102,7 @@ public class WireMockContractIT {
   void alterTableAddColumnsReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
     api.alterTableAddColumns(
-            "test_ns.test_table",
-            new AlterTableAddColumnsRequest().newColumns(new java.util.ArrayList<>()),
-            null)
+            "x", new AlterTableAddColumnsRequest().newColumns(new java.util.ArrayList<>()), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -115,9 +112,7 @@ public class WireMockContractIT {
   void alterTableAlterColumnsReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
     api.alterTableAlterColumns(
-            "test_ns.test_table",
-            new AlterTableAlterColumnsRequest().alterations(new java.util.ArrayList<>()),
-            null)
+            "x", new AlterTableAlterColumnsRequest().alterations(new java.util.ArrayList<>()), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -126,8 +121,7 @@ public class WireMockContractIT {
   @Test
   void alterTableBackfillColumnsReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.alterTableBackfillColumns(
-            "test_ns.test_table", new AlterTableBackfillColumnsRequest().column("col"), null)
+    api.alterTableBackfillColumns("x", new AlterTableBackfillColumnsRequest().column("x"), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -137,9 +131,7 @@ public class WireMockContractIT {
   void alterTableDropColumnsReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
     api.alterTableDropColumns(
-            "test_ns.test_table",
-            new AlterTableDropColumnsRequest().columns(new java.util.ArrayList<>()),
-            null)
+            "x", new AlterTableDropColumnsRequest().columns(new java.util.ArrayList<>()), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -149,7 +141,7 @@ public class WireMockContractIT {
   void alterTransactionReturnsValidResponse() throws Exception {
     TransactionApi api = new TransactionApi(apiClient);
     api.alterTransaction(
-            "test_txn",
+            "x",
             new AlterTransactionRequest()
                 .actions(java.util.Arrays.asList(new AlterTransactionAction())),
             null)
@@ -162,10 +154,8 @@ public class WireMockContractIT {
   void analyzeTableQueryPlanReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
     api.analyzeTableQueryPlan(
-            "test_ns.test_table",
-            new AnalyzeTableQueryPlanRequest()
-                .k(1)
-                .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
+            "x",
+            new AnalyzeTableQueryPlanRequest().k(0).vector(new QueryTableRequestVector()),
             null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
@@ -196,9 +186,7 @@ public class WireMockContractIT {
   void batchDeleteTableVersionsReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
     api.batchDeleteTableVersions(
-            "test_ns.test_table",
-            new BatchDeleteTableVersionsRequest().ranges(new java.util.ArrayList<>()),
-            null)
+            "x", new BatchDeleteTableVersionsRequest().ranges(new java.util.ArrayList<>()), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -207,8 +195,7 @@ public class WireMockContractIT {
   @Test
   void countTableRowsReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.countTableRows("test_ns.test_table", new CountTableRowsRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.countTableRows("x", new CountTableRowsRequest(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -216,7 +203,7 @@ public class WireMockContractIT {
   @Test
   void createNamespaceReturnsValidResponse() throws Exception {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.createNamespace("test_ns", new CreateNamespaceRequest(), null).get(10, TimeUnit.SECONDS);
+    api.createNamespace("x", new CreateNamespaceRequest(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -224,8 +211,7 @@ public class WireMockContractIT {
   @Test
   void createTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.createTable("test_ns.test_table", new byte[0], null, null, null, null)
-        .get(10, TimeUnit.SECONDS);
+    api.createTable("x", new byte[0], null, null, null, null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -233,10 +219,7 @@ public class WireMockContractIT {
   @Test
   void createTableIndexReturnsValidResponse() throws Exception {
     IndexApi api = new IndexApi(apiClient);
-    api.createTableIndex(
-            "test_ns.test_table",
-            new CreateTableIndexRequest().column("col").indexType("IVF_PQ"),
-            null)
+    api.createTableIndex("x", new CreateTableIndexRequest().column("x").indexType("x"), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -245,10 +228,7 @@ public class WireMockContractIT {
   @Test
   void createTableScalarIndexReturnsValidResponse() throws Exception {
     IndexApi api = new IndexApi(apiClient);
-    api.createTableScalarIndex(
-            "test_ns.test_table",
-            new CreateTableIndexRequest().column("col").indexType("BTREE"),
-            null)
+    api.createTableScalarIndex("x", new CreateTableIndexRequest().column("x").indexType("x"), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -257,8 +237,7 @@ public class WireMockContractIT {
   @Test
   void createTableTagReturnsValidResponse() throws Exception {
     TagApi api = new TagApi(apiClient);
-    api.createTableTag(
-            "test_ns.test_table", new CreateTableTagRequest().tag("v1").version(1L), null)
+    api.createTableTag("x", new CreateTableTagRequest().tag("x").version(0L), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -267,10 +246,7 @@ public class WireMockContractIT {
   @Test
   void createTableVersionReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.createTableVersion(
-            "test_ns.test_table",
-            new CreateTableVersionRequest().version(1L).manifestPath("manifest_path"),
-            null)
+    api.createTableVersion("x", new CreateTableVersionRequest().version(0L).manifestPath("x"), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -279,8 +255,7 @@ public class WireMockContractIT {
   @Test
   void declareTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.declareTable("test_ns.test_table", new DeclareTableRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.declareTable("x", new DeclareTableRequest(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -288,8 +263,7 @@ public class WireMockContractIT {
   @Test
   void deleteFromTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.deleteFromTable(
-            "test_ns.test_table", new DeleteFromTableRequest().predicate("id = 1"), null)
+    api.deleteFromTable("x", new DeleteFromTableRequest().predicate("x"), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -298,8 +272,7 @@ public class WireMockContractIT {
   @Test
   void deleteTableTagReturnsValidResponse() throws Exception {
     TagApi api = new TagApi(apiClient);
-    api.deleteTableTag("test_ns.test_table", new DeleteTableTagRequest().tag("v1"), null)
-        .get(10, TimeUnit.SECONDS);
+    api.deleteTableTag("x", new DeleteTableTagRequest().tag("x"), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -307,8 +280,7 @@ public class WireMockContractIT {
   @Test
   void deregisterTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.deregisterTable("test_ns.test_table", new DeregisterTableRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.deregisterTable("x", new DeregisterTableRequest(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -316,8 +288,7 @@ public class WireMockContractIT {
   @Test
   void describeNamespaceReturnsValidResponse() throws Exception {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.describeNamespace("ns_existing", new DescribeNamespaceRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.describeNamespace("x", new DescribeNamespaceRequest(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -325,8 +296,7 @@ public class WireMockContractIT {
   @Test
   void describeTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.describeTable(
-            "ns_with_tables.table_alpha", new DescribeTableRequest(), null, null, null, null)
+    api.describeTable("x", new DescribeTableRequest(), null, null, null, null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -335,8 +305,7 @@ public class WireMockContractIT {
   @Test
   void describeTableIndexStatsReturnsValidResponse() throws Exception {
     IndexApi api = new IndexApi(apiClient);
-    api.describeTableIndexStats(
-            "test_ns.test_table", "idx", new DescribeTableIndexStatsRequest(), null)
+    api.describeTableIndexStats("x", "x", new DescribeTableIndexStatsRequest(), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -345,7 +314,7 @@ public class WireMockContractIT {
   @Test
   void describeTableVersionReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.describeTableVersion("test_ns.test_table", new DescribeTableVersionRequest(), null)
+    api.describeTableVersion("x", new DescribeTableVersionRequest(), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -354,8 +323,7 @@ public class WireMockContractIT {
   @Test
   void describeTransactionReturnsValidResponse() throws Exception {
     TransactionApi api = new TransactionApi(apiClient);
-    api.describeTransaction("test_txn", new DescribeTransactionRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.describeTransaction("x", new DescribeTransactionRequest(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -363,7 +331,7 @@ public class WireMockContractIT {
   @Test
   void dropNamespaceReturnsValidResponse() throws Exception {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.dropNamespace("ns_existing", new DropNamespaceRequest(), null).get(10, TimeUnit.SECONDS);
+    api.dropNamespace("x", new DropNamespaceRequest(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -371,7 +339,7 @@ public class WireMockContractIT {
   @Test
   void dropTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.dropTable("test_ns.test_table", null).get(10, TimeUnit.SECONDS);
+    api.dropTable("x", null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -379,7 +347,7 @@ public class WireMockContractIT {
   @Test
   void dropTableIndexReturnsValidResponse() throws Exception {
     IndexApi api = new IndexApi(apiClient);
-    api.dropTableIndex("test_ns.test_table", "idx", null).get(10, TimeUnit.SECONDS);
+    api.dropTableIndex("x", "x", null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -388,14 +356,9 @@ public class WireMockContractIT {
   void explainTableQueryPlanReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
     api.explainTableQueryPlan(
-            "test_ns.test_table",
+            "x",
             new ExplainTableQueryPlanRequest()
-                .query(
-                    new QueryTableRequest()
-                        .k(1)
-                        .vector(
-                            new QueryTableRequestVector()
-                                .singleVector(java.util.Arrays.asList(0.1f)))),
+                .query(new QueryTableRequest().k(0).vector(new QueryTableRequestVector())),
             null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
@@ -405,8 +368,7 @@ public class WireMockContractIT {
   @Test
   void getTableStatsReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.getTableStats("test_ns.test_table", new GetTableStatsRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.getTableStats("x", new GetTableStatsRequest(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -414,7 +376,7 @@ public class WireMockContractIT {
   @Test
   void getTableTagVersionReturnsValidResponse() throws Exception {
     TagApi api = new TagApi(apiClient);
-    api.getTableTagVersion("test_ns.test_table", new GetTableTagVersionRequest().tag("v1"), null)
+    api.getTableTagVersion("x", new GetTableTagVersionRequest().tag("x"), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -423,7 +385,7 @@ public class WireMockContractIT {
   @Test
   void insertIntoTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.insertIntoTable("test_ns.test_table", new byte[0], null, null).get(10, TimeUnit.SECONDS);
+    api.insertIntoTable("x", new byte[0], null, null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -439,7 +401,7 @@ public class WireMockContractIT {
   @Test
   void listNamespacesReturnsValidResponse() throws Exception {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.listNamespaces("$", null, null, null).get(10, TimeUnit.SECONDS);
+    api.listNamespaces("x", null, null, null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -447,8 +409,7 @@ public class WireMockContractIT {
   @Test
   void listTableIndicesReturnsValidResponse() throws Exception {
     IndexApi api = new IndexApi(apiClient);
-    api.listTableIndices("test_ns.test_table", new ListTableIndicesRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.listTableIndices("x", new ListTableIndicesRequest(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -456,7 +417,7 @@ public class WireMockContractIT {
   @Test
   void listTableTagsReturnsValidResponse() throws Exception {
     TagApi api = new TagApi(apiClient);
-    api.listTableTags("test_ns.test_table", null, null, null).get(10, TimeUnit.SECONDS);
+    api.listTableTags("x", null, null, null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -464,7 +425,7 @@ public class WireMockContractIT {
   @Test
   void listTableVersionsReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.listTableVersions("test_ns.test_table", null, null, null, null).get(10, TimeUnit.SECONDS);
+    api.listTableVersions("x", null, null, null, null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -472,7 +433,7 @@ public class WireMockContractIT {
   @Test
   void listTablesReturnsValidResponse() throws Exception {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.listTables("ns_with_tables", null, null, null, null).get(10, TimeUnit.SECONDS);
+    api.listTables("x", null, null, null, null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -480,8 +441,7 @@ public class WireMockContractIT {
   @Test
   void mergeInsertIntoTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.mergeInsertIntoTable(
-            "test_ns.test_table", "id", new byte[0], null, null, null, null, null, null, null, null)
+    api.mergeInsertIntoTable("x", "x", new byte[0], null, null, null, null, null, null, null, null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -490,19 +450,13 @@ public class WireMockContractIT {
   @Test
   void namespaceExistsReturnsValidResponse() throws Exception {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.namespaceExists("ns_existing", new NamespaceExistsRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.namespaceExists("x", new NamespaceExistsRequest(), null).get(10, TimeUnit.SECONDS);
   }
 
   @Test
   void queryTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.queryTable(
-            "test_ns.test_table",
-            new QueryTableRequest()
-                .k(1)
-                .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
-            null)
+    api.queryTable("x", new QueryTableRequest().k(0).vector(new QueryTableRequestVector()), null)
         .get(10, TimeUnit.SECONDS);
     // Binary response — successful return is the contract assertion.
   }
@@ -510,8 +464,7 @@ public class WireMockContractIT {
   @Test
   void refreshMaterializedViewReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.refreshMaterializedView("test_ns.test_table", null, new RefreshMaterializedViewRequest())
-        .get(10, TimeUnit.SECONDS);
+    api.refreshMaterializedView("x", null, null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -519,8 +472,7 @@ public class WireMockContractIT {
   @Test
   void registerTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.registerTable(
-            "test_ns.test_table", new RegisterTableRequest().location("s3://bucket/path"), null)
+    api.registerTable("x", new RegisterTableRequest().location("x"), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -529,7 +481,7 @@ public class WireMockContractIT {
   @Test
   void renameTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.renameTable("test_ns.test_table", new RenameTableRequest().newTableName("new_name"), null)
+    api.renameTable("x", new RenameTableRequest().newTableName("x"), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -538,8 +490,7 @@ public class WireMockContractIT {
   @Test
   void restoreTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.restoreTable("test_ns.test_table", new RestoreTableRequest().version(1L), null)
-        .get(10, TimeUnit.SECONDS);
+    api.restoreTable("x", new RestoreTableRequest().version(0L), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -547,17 +498,13 @@ public class WireMockContractIT {
   @Test
   void tableExistsReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.tableExists("ns_with_tables.table_alpha", new TableExistsRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.tableExists("x", new TableExistsRequest(), null).get(10, TimeUnit.SECONDS);
   }
 
   @Test
   void updateTableReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.updateTable(
-            "test_ns.test_table",
-            new UpdateTableRequest().updates(new java.util.ArrayList<>()),
-            null)
+    api.updateTable("x", new UpdateTableRequest().updates(new java.util.ArrayList<>()), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
@@ -566,8 +513,7 @@ public class WireMockContractIT {
   @Test
   void updateTableSchemaMetadataReturnsValidResponse() throws Exception {
     TableApi api = new TableApi(apiClient);
-    api.updateTableSchemaMetadata("test_ns.test_table", new java.util.HashMap<>(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.updateTableSchemaMetadata("x", new java.util.HashMap<>(), null).get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
@@ -575,8 +521,7 @@ public class WireMockContractIT {
   @Test
   void updateTableTagReturnsValidResponse() throws Exception {
     TagApi api = new TagApi(apiClient);
-    api.updateTableTag(
-            "test_ns.test_table", new UpdateTableTagRequest().tag("v1").version(2L), null)
+    api.updateTableTag("x", new UpdateTableTagRequest().tag("x").version(0L), null)
         .get(10, TimeUnit.SECONDS);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.

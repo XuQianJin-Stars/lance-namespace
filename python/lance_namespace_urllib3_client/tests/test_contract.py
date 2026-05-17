@@ -108,7 +108,7 @@ def test_alter_table_add_columns(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.alter_table_add_columns_request import AlterTableAddColumnsRequest
     api = TableApi(api_client)
-    result = api.alter_table_add_columns(id="test_ns.test_table", alter_table_add_columns_request=AlterTableAddColumnsRequest(new_columns=[]))
+    result = api.alter_table_add_columns(id="x", alter_table_add_columns_request=AlterTableAddColumnsRequest(new_columns=[]))
     del result
 
 
@@ -117,7 +117,7 @@ def test_alter_table_alter_columns(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.alter_table_alter_columns_request import AlterTableAlterColumnsRequest
     api = TableApi(api_client)
-    result = api.alter_table_alter_columns(id="test_ns.test_table", alter_table_alter_columns_request=AlterTableAlterColumnsRequest(alterations=[]))
+    result = api.alter_table_alter_columns(id="x", alter_table_alter_columns_request=AlterTableAlterColumnsRequest(alterations=[]))
     del result
 
 
@@ -126,7 +126,7 @@ def test_alter_table_backfill_columns(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.alter_table_backfill_columns_request import AlterTableBackfillColumnsRequest
     api = TableApi(api_client)
-    result = api.alter_table_backfill_columns(id="test_ns.test_table", alter_table_backfill_columns_request=AlterTableBackfillColumnsRequest(column="col"))
+    result = api.alter_table_backfill_columns(id="x", alter_table_backfill_columns_request=AlterTableBackfillColumnsRequest(column="x"))
     del result
 
 
@@ -135,7 +135,7 @@ def test_alter_table_drop_columns(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.alter_table_drop_columns_request import AlterTableDropColumnsRequest
     api = TableApi(api_client)
-    result = api.alter_table_drop_columns(id="test_ns.test_table", alter_table_drop_columns_request=AlterTableDropColumnsRequest(columns=[]))
+    result = api.alter_table_drop_columns(id="x", alter_table_drop_columns_request=AlterTableDropColumnsRequest(columns=[]))
     del result
 
 
@@ -145,7 +145,7 @@ def test_alter_transaction(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.models.alter_transaction_action import AlterTransactionAction
     from lance_namespace_urllib3_client.models.alter_transaction_request import AlterTransactionRequest
     api = TransactionApi(api_client)
-    result = api.alter_transaction(id="test_txn", alter_transaction_request=AlterTransactionRequest(actions=[AlterTransactionAction()]))
+    result = api.alter_transaction(id="x", alter_transaction_request=AlterTransactionRequest(actions=[AlterTransactionAction()]))
     del result
 
 
@@ -155,7 +155,7 @@ def test_analyze_table_query_plan(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.models.analyze_table_query_plan_request import AnalyzeTableQueryPlanRequest
     from lance_namespace_urllib3_client.models.query_table_request_vector import QueryTableRequestVector
     api = TableApi(api_client)
-    result = api.analyze_table_query_plan(id="test_ns.test_table", analyze_table_query_plan_request=AnalyzeTableQueryPlanRequest(k=1, vector=QueryTableRequestVector(single_vector=[0.1])))
+    result = api.analyze_table_query_plan(id="x", analyze_table_query_plan_request=AnalyzeTableQueryPlanRequest(k=0, vector=QueryTableRequestVector()))
     del result
 
 
@@ -182,7 +182,7 @@ def test_batch_delete_table_versions(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.batch_delete_table_versions_request import BatchDeleteTableVersionsRequest
     api = TableApi(api_client)
-    result = api.batch_delete_table_versions(id="test_ns.test_table", batch_delete_table_versions_request=BatchDeleteTableVersionsRequest(ranges=[]))
+    result = api.batch_delete_table_versions(id="x", batch_delete_table_versions_request=BatchDeleteTableVersionsRequest(ranges=[]))
     del result
 
 
@@ -191,7 +191,7 @@ def test_count_table_rows(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.count_table_rows_request import CountTableRowsRequest
     api = TableApi(api_client)
-    result = api.count_table_rows(id="test_ns.test_table", count_table_rows_request=CountTableRowsRequest())
+    result = api.count_table_rows(id="x", count_table_rows_request=CountTableRowsRequest())
     del result
 
 
@@ -200,7 +200,7 @@ def test_create_namespace(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     from lance_namespace_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
     api = NamespaceApi(api_client)
-    result = api.create_namespace(id="test_ns", create_namespace_request=CreateNamespaceRequest())
+    result = api.create_namespace(id="x", create_namespace_request=CreateNamespaceRequest())
     del result
 
 
@@ -208,7 +208,7 @@ def test_create_table(api_client: ApiClient) -> None:
     """CreateTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    result = api.create_table(id="test_ns.test_table", body=b'')
+    result = api.create_table(id="x", body=b'')
     del result
 
 
@@ -217,7 +217,7 @@ def test_create_table_index(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     from lance_namespace_urllib3_client.models.create_table_index_request import CreateTableIndexRequest
     api = IndexApi(api_client)
-    result = api.create_table_index(id="test_ns.test_table", create_table_index_request=CreateTableIndexRequest(column="col", index_type="IVF_PQ"))
+    result = api.create_table_index(id="x", create_table_index_request=CreateTableIndexRequest(column="x", index_type="x"))
     del result
 
 
@@ -226,7 +226,7 @@ def test_create_table_scalar_index(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     from lance_namespace_urllib3_client.models.create_table_index_request import CreateTableIndexRequest
     api = IndexApi(api_client)
-    result = api.create_table_scalar_index(id="test_ns.test_table", create_table_index_request=CreateTableIndexRequest(column="col", index_type="BTREE"))
+    result = api.create_table_scalar_index(id="x", create_table_index_request=CreateTableIndexRequest(column="x", index_type="x"))
     del result
 
 
@@ -235,7 +235,7 @@ def test_create_table_tag(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     from lance_namespace_urllib3_client.models.create_table_tag_request import CreateTableTagRequest
     api = TagApi(api_client)
-    result = api.create_table_tag(id="test_ns.test_table", create_table_tag_request=CreateTableTagRequest(tag="v1", version=1))
+    result = api.create_table_tag(id="x", create_table_tag_request=CreateTableTagRequest(tag="x", version=0))
     del result
 
 
@@ -244,7 +244,7 @@ def test_create_table_version(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.create_table_version_request import CreateTableVersionRequest
     api = TableApi(api_client)
-    result = api.create_table_version(id="test_ns.test_table", create_table_version_request=CreateTableVersionRequest(version=1, manifest_path="manifest_path"))
+    result = api.create_table_version(id="x", create_table_version_request=CreateTableVersionRequest(version=0, manifest_path="x"))
     del result
 
 
@@ -253,7 +253,7 @@ def test_declare_table(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.declare_table_request import DeclareTableRequest
     api = TableApi(api_client)
-    result = api.declare_table(id="test_ns.test_table", declare_table_request=DeclareTableRequest())
+    result = api.declare_table(id="x", declare_table_request=DeclareTableRequest())
     del result
 
 
@@ -262,7 +262,7 @@ def test_delete_from_table(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.delete_from_table_request import DeleteFromTableRequest
     api = TableApi(api_client)
-    result = api.delete_from_table(id="test_ns.test_table", delete_from_table_request=DeleteFromTableRequest(predicate="id = 1"))
+    result = api.delete_from_table(id="x", delete_from_table_request=DeleteFromTableRequest(predicate="x"))
     del result
 
 
@@ -271,7 +271,7 @@ def test_delete_table_tag(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     from lance_namespace_urllib3_client.models.delete_table_tag_request import DeleteTableTagRequest
     api = TagApi(api_client)
-    result = api.delete_table_tag(id="test_ns.test_table", delete_table_tag_request=DeleteTableTagRequest(tag="v1"))
+    result = api.delete_table_tag(id="x", delete_table_tag_request=DeleteTableTagRequest(tag="x"))
     del result
 
 
@@ -280,7 +280,7 @@ def test_deregister_table(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.deregister_table_request import DeregisterTableRequest
     api = TableApi(api_client)
-    result = api.deregister_table(id="test_ns.test_table", deregister_table_request=DeregisterTableRequest())
+    result = api.deregister_table(id="x", deregister_table_request=DeregisterTableRequest())
     del result
 
 
@@ -289,7 +289,7 @@ def test_describe_namespace(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     from lance_namespace_urllib3_client.models.describe_namespace_request import DescribeNamespaceRequest
     api = NamespaceApi(api_client)
-    result = api.describe_namespace(id="ns_existing", describe_namespace_request=DescribeNamespaceRequest())
+    result = api.describe_namespace(id="x", describe_namespace_request=DescribeNamespaceRequest())
     del result
 
 
@@ -298,7 +298,7 @@ def test_describe_table(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.describe_table_request import DescribeTableRequest
     api = TableApi(api_client)
-    result = api.describe_table(id="ns_with_tables.table_alpha", describe_table_request=DescribeTableRequest())
+    result = api.describe_table(id="x", describe_table_request=DescribeTableRequest())
     del result
 
 
@@ -307,7 +307,7 @@ def test_describe_table_index_stats(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     from lance_namespace_urllib3_client.models.describe_table_index_stats_request import DescribeTableIndexStatsRequest
     api = IndexApi(api_client)
-    result = api.describe_table_index_stats(id="test_ns.test_table", index_name="idx", describe_table_index_stats_request=DescribeTableIndexStatsRequest())
+    result = api.describe_table_index_stats(id="x", index_name="x", describe_table_index_stats_request=DescribeTableIndexStatsRequest())
     del result
 
 
@@ -316,7 +316,7 @@ def test_describe_table_version(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.describe_table_version_request import DescribeTableVersionRequest
     api = TableApi(api_client)
-    result = api.describe_table_version(id="test_ns.test_table", describe_table_version_request=DescribeTableVersionRequest())
+    result = api.describe_table_version(id="x", describe_table_version_request=DescribeTableVersionRequest())
     del result
 
 
@@ -325,7 +325,7 @@ def test_describe_transaction(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.transaction_api import TransactionApi
     from lance_namespace_urllib3_client.models.describe_transaction_request import DescribeTransactionRequest
     api = TransactionApi(api_client)
-    result = api.describe_transaction(id="test_txn", describe_transaction_request=DescribeTransactionRequest())
+    result = api.describe_transaction(id="x", describe_transaction_request=DescribeTransactionRequest())
     del result
 
 
@@ -334,7 +334,7 @@ def test_drop_namespace(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     from lance_namespace_urllib3_client.models.drop_namespace_request import DropNamespaceRequest
     api = NamespaceApi(api_client)
-    result = api.drop_namespace(id="ns_existing", drop_namespace_request=DropNamespaceRequest())
+    result = api.drop_namespace(id="x", drop_namespace_request=DropNamespaceRequest())
     del result
 
 
@@ -342,7 +342,7 @@ def test_drop_table(api_client: ApiClient) -> None:
     """DropTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    result = api.drop_table(id="test_ns.test_table")
+    result = api.drop_table(id="x")
     del result
 
 
@@ -350,7 +350,7 @@ def test_drop_table_index(api_client: ApiClient) -> None:
     """DropTableIndex returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     api = IndexApi(api_client)
-    result = api.drop_table_index(id="test_ns.test_table", index_name="idx")
+    result = api.drop_table_index(id="x", index_name="x")
     del result
 
 
@@ -361,7 +361,7 @@ def test_explain_table_query_plan(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.models.query_table_request import QueryTableRequest
     from lance_namespace_urllib3_client.models.query_table_request_vector import QueryTableRequestVector
     api = TableApi(api_client)
-    result = api.explain_table_query_plan(id="test_ns.test_table", explain_table_query_plan_request=ExplainTableQueryPlanRequest(query=QueryTableRequest(k=1, vector=QueryTableRequestVector(single_vector=[0.1]))))
+    result = api.explain_table_query_plan(id="x", explain_table_query_plan_request=ExplainTableQueryPlanRequest(query=QueryTableRequest(k=0, vector=QueryTableRequestVector())))
     del result
 
 
@@ -370,7 +370,7 @@ def test_get_table_stats(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.get_table_stats_request import GetTableStatsRequest
     api = TableApi(api_client)
-    result = api.get_table_stats(id="test_ns.test_table", get_table_stats_request=GetTableStatsRequest())
+    result = api.get_table_stats(id="x", get_table_stats_request=GetTableStatsRequest())
     del result
 
 
@@ -379,7 +379,7 @@ def test_get_table_tag_version(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     from lance_namespace_urllib3_client.models.get_table_tag_version_request import GetTableTagVersionRequest
     api = TagApi(api_client)
-    result = api.get_table_tag_version(id="test_ns.test_table", get_table_tag_version_request=GetTableTagVersionRequest(tag="v1"))
+    result = api.get_table_tag_version(id="x", get_table_tag_version_request=GetTableTagVersionRequest(tag="x"))
     del result
 
 
@@ -387,7 +387,7 @@ def test_insert_into_table(api_client: ApiClient) -> None:
     """InsertIntoTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    result = api.insert_into_table(id="test_ns.test_table", body=b'')
+    result = api.insert_into_table(id="x", body=b'')
     del result
 
 
@@ -403,7 +403,7 @@ def test_list_namespaces(api_client: ApiClient) -> None:
     """ListNamespaces returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     api = NamespaceApi(api_client)
-    result = api.list_namespaces(id="$")
+    result = api.list_namespaces(id="x")
     del result
 
 
@@ -412,7 +412,7 @@ def test_list_table_indices(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     from lance_namespace_urllib3_client.models.list_table_indices_request import ListTableIndicesRequest
     api = IndexApi(api_client)
-    result = api.list_table_indices(id="test_ns.test_table", list_table_indices_request=ListTableIndicesRequest())
+    result = api.list_table_indices(id="x", list_table_indices_request=ListTableIndicesRequest())
     del result
 
 
@@ -420,7 +420,7 @@ def test_list_table_tags(api_client: ApiClient) -> None:
     """ListTableTags returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     api = TagApi(api_client)
-    result = api.list_table_tags(id="test_ns.test_table")
+    result = api.list_table_tags(id="x")
     del result
 
 
@@ -428,7 +428,7 @@ def test_list_table_versions(api_client: ApiClient) -> None:
     """ListTableVersions returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    result = api.list_table_versions(id="test_ns.test_table")
+    result = api.list_table_versions(id="x")
     del result
 
 
@@ -436,7 +436,7 @@ def test_list_tables(api_client: ApiClient) -> None:
     """ListTables returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     api = NamespaceApi(api_client)
-    result = api.list_tables(id="ns_with_tables")
+    result = api.list_tables(id="x")
     del result
 
 
@@ -444,7 +444,7 @@ def test_merge_insert_into_table(api_client: ApiClient) -> None:
     """MergeInsertIntoTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    result = api.merge_insert_into_table(id="test_ns.test_table", on="id", body=b'')
+    result = api.merge_insert_into_table(id="x", on="x", body=b'')
     del result
 
 
@@ -453,7 +453,7 @@ def test_namespace_exists(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
     api = NamespaceApi(api_client)
-    api.namespace_exists(id="ns_existing", namespace_exists_request=NamespaceExistsRequest())
+    api.namespace_exists(id="x", namespace_exists_request=NamespaceExistsRequest())
 
 
 def test_query_table(api_client: ApiClient) -> None:
@@ -462,16 +462,15 @@ def test_query_table(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.models.query_table_request import QueryTableRequest
     from lance_namespace_urllib3_client.models.query_table_request_vector import QueryTableRequestVector
     api = TableApi(api_client)
-    result = api.query_table(id="test_ns.test_table", query_table_request=QueryTableRequest(k=1, vector=QueryTableRequestVector(single_vector=[0.1])))
+    result = api.query_table(id="x", query_table_request=QueryTableRequest(k=0, vector=QueryTableRequestVector()))
     del result
 
 
 def test_refresh_materialized_view(api_client: ApiClient) -> None:
     """RefreshMaterializedView returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
-    from lance_namespace_urllib3_client.models.refresh_materialized_view_request import RefreshMaterializedViewRequest
     api = TableApi(api_client)
-    result = api.refresh_materialized_view(id="test_ns.test_table", refresh_materialized_view_request=RefreshMaterializedViewRequest())
+    result = api.refresh_materialized_view(id="x")
     del result
 
 
@@ -480,7 +479,7 @@ def test_register_table(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.register_table_request import RegisterTableRequest
     api = TableApi(api_client)
-    result = api.register_table(id="test_ns.test_table", register_table_request=RegisterTableRequest(location="s3://bucket/path"))
+    result = api.register_table(id="x", register_table_request=RegisterTableRequest(location="x"))
     del result
 
 
@@ -489,7 +488,7 @@ def test_rename_table(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.rename_table_request import RenameTableRequest
     api = TableApi(api_client)
-    result = api.rename_table(id="test_ns.test_table", rename_table_request=RenameTableRequest(new_table_name="new_name"))
+    result = api.rename_table(id="x", rename_table_request=RenameTableRequest(new_table_name="x"))
     del result
 
 
@@ -498,7 +497,7 @@ def test_restore_table(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.restore_table_request import RestoreTableRequest
     api = TableApi(api_client)
-    result = api.restore_table(id="test_ns.test_table", restore_table_request=RestoreTableRequest(version=1))
+    result = api.restore_table(id="x", restore_table_request=RestoreTableRequest(version=0))
     del result
 
 
@@ -507,7 +506,7 @@ def test_table_exists(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.table_exists_request import TableExistsRequest
     api = TableApi(api_client)
-    api.table_exists(id="ns_with_tables.table_alpha", table_exists_request=TableExistsRequest())
+    api.table_exists(id="x", table_exists_request=TableExistsRequest())
 
 
 def test_update_table(api_client: ApiClient) -> None:
@@ -515,7 +514,7 @@ def test_update_table(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.update_table_request import UpdateTableRequest
     api = TableApi(api_client)
-    result = api.update_table(id="test_ns.test_table", update_table_request=UpdateTableRequest(updates=[]))
+    result = api.update_table(id="x", update_table_request=UpdateTableRequest(updates=[]))
     del result
 
 
@@ -523,7 +522,7 @@ def test_update_table_schema_metadata(api_client: ApiClient) -> None:
     """UpdateTableSchemaMetadata returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    result = api.update_table_schema_metadata(id="test_ns.test_table", request_body={})
+    result = api.update_table_schema_metadata(id="x", request_body={})
     del result
 
 
@@ -532,5 +531,5 @@ def test_update_table_tag(api_client: ApiClient) -> None:
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     from lance_namespace_urllib3_client.models.update_table_tag_request import UpdateTableTagRequest
     api = TagApi(api_client)
-    result = api.update_table_tag(id="test_ns.test_table", update_table_tag_request=UpdateTableTagRequest(tag="v1", version=2))
+    result = api.update_table_tag(id="x", update_table_tag_request=UpdateTableTagRequest(tag="x", version=0))
     del result

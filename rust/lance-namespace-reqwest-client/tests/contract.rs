@@ -112,7 +112,7 @@ async fn contract_alter_table_add_columns() {
     let config = make_config();
     data_api::alter_table_add_columns(
         &config,
-        "test_ns.test_table",
+        "x",
         models::AlterTableAddColumnsRequest::new(vec![]),
         None,
     )
@@ -125,7 +125,7 @@ async fn contract_alter_table_alter_columns() {
     let config = make_config();
     metadata_api::alter_table_alter_columns(
         &config,
-        "test_ns.test_table",
+        "x",
         models::AlterTableAlterColumnsRequest::new(vec![]),
         None,
     )
@@ -138,8 +138,8 @@ async fn contract_alter_table_backfill_columns() {
     let config = make_config();
     data_api::alter_table_backfill_columns(
         &config,
-        "test_ns.test_table",
-        models::AlterTableBackfillColumnsRequest::new("col".to_string()),
+        "x",
+        models::AlterTableBackfillColumnsRequest::new("x".to_string()),
         None,
     )
     .await
@@ -151,7 +151,7 @@ async fn contract_alter_table_drop_columns() {
     let config = make_config();
     metadata_api::alter_table_drop_columns(
         &config,
-        "test_ns.test_table",
+        "x",
         models::AlterTableDropColumnsRequest::new(vec![]),
         None,
     )
@@ -164,7 +164,7 @@ async fn contract_alter_transaction() {
     let config = make_config();
     metadata_api::alter_transaction(
         &config,
-        "test_txn",
+        "x",
         models::AlterTransactionRequest::new(vec![models::AlterTransactionAction::new()]),
         None,
     )
@@ -177,14 +177,8 @@ async fn contract_analyze_table_query_plan() {
     let config = make_config();
     data_api::analyze_table_query_plan(
         &config,
-        "test_ns.test_table",
-        models::AnalyzeTableQueryPlanRequest::new(
-            1i32,
-            models::QueryTableRequestVector {
-                single_vector: Some(vec![0.1f32]),
-                ..Default::default()
-            },
-        ),
+        "x",
+        models::AnalyzeTableQueryPlanRequest::new(0i32, models::QueryTableRequestVector::new()),
         None,
     )
     .await
@@ -216,7 +210,7 @@ async fn contract_batch_delete_table_versions() {
     let config = make_config();
     metadata_api::batch_delete_table_versions(
         &config,
-        "test_ns.test_table",
+        "x",
         models::BatchDeleteTableVersionsRequest::new(vec![]),
         None,
     )
@@ -227,43 +221,25 @@ async fn contract_batch_delete_table_versions() {
 #[tokio::test]
 async fn contract_count_table_rows() {
     let config = make_config();
-    data_api::count_table_rows(
-        &config,
-        "test_ns.test_table",
-        models::CountTableRowsRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    data_api::count_table_rows(&config, "x", models::CountTableRowsRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_create_namespace() {
     let config = make_config();
-    metadata_api::create_namespace(
-        &config,
-        "test_ns",
-        models::CreateNamespaceRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    metadata_api::create_namespace(&config, "x", models::CreateNamespaceRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_create_table() {
     let config = make_config();
-    data_api::create_table(
-        &config,
-        "test_ns.test_table",
-        vec![],
-        None,
-        None,
-        None,
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    data_api::create_table(&config, "x", vec![], None, None, None, None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
@@ -271,8 +247,8 @@ async fn contract_create_table_index() {
     let config = make_config();
     index_api::create_table_index(
         &config,
-        "test_ns.test_table",
-        models::CreateTableIndexRequest::new("col".to_string(), "IVF_PQ".to_string()),
+        "x",
+        models::CreateTableIndexRequest::new("x".to_string(), "x".to_string()),
         None,
     )
     .await
@@ -284,8 +260,8 @@ async fn contract_create_table_scalar_index() {
     let config = make_config();
     index_api::create_table_scalar_index(
         &config,
-        "test_ns.test_table",
-        models::CreateTableIndexRequest::new("col".to_string(), "BTREE".to_string()),
+        "x",
+        models::CreateTableIndexRequest::new("x".to_string(), "x".to_string()),
         None,
     )
     .await
@@ -297,8 +273,8 @@ async fn contract_create_table_tag() {
     let config = make_config();
     metadata_api::create_table_tag(
         &config,
-        "test_ns.test_table",
-        models::CreateTableTagRequest::new("v1".to_string(), 1i64),
+        "x",
+        models::CreateTableTagRequest::new("x".to_string(), 0i64),
         None,
     )
     .await
@@ -310,8 +286,8 @@ async fn contract_create_table_version() {
     let config = make_config();
     metadata_api::create_table_version(
         &config,
-        "test_ns.test_table",
-        models::CreateTableVersionRequest::new(1i64, "manifest_path".to_string()),
+        "x",
+        models::CreateTableVersionRequest::new(0i64, "x".to_string()),
         None,
     )
     .await
@@ -321,14 +297,9 @@ async fn contract_create_table_version() {
 #[tokio::test]
 async fn contract_declare_table() {
     let config = make_config();
-    metadata_api::declare_table(
-        &config,
-        "test_ns.test_table",
-        models::DeclareTableRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    metadata_api::declare_table(&config, "x", models::DeclareTableRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
@@ -336,8 +307,8 @@ async fn contract_delete_from_table() {
     let config = make_config();
     data_api::delete_from_table(
         &config,
-        "test_ns.test_table",
-        models::DeleteFromTableRequest::new("id = 1".to_string()),
+        "x",
+        models::DeleteFromTableRequest::new("x".to_string()),
         None,
     )
     .await
@@ -349,8 +320,8 @@ async fn contract_delete_table_tag() {
     let config = make_config();
     metadata_api::delete_table_tag(
         &config,
-        "test_ns.test_table",
-        models::DeleteTableTagRequest::new("v1".to_string()),
+        "x",
+        models::DeleteTableTagRequest::new("x".to_string()),
         None,
     )
     .await
@@ -360,27 +331,17 @@ async fn contract_delete_table_tag() {
 #[tokio::test]
 async fn contract_deregister_table() {
     let config = make_config();
-    metadata_api::deregister_table(
-        &config,
-        "test_ns.test_table",
-        models::DeregisterTableRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    metadata_api::deregister_table(&config, "x", models::DeregisterTableRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_describe_namespace() {
     let config = make_config();
-    metadata_api::describe_namespace(
-        &config,
-        "ns_existing",
-        models::DescribeNamespaceRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    metadata_api::describe_namespace(&config, "x", models::DescribeNamespaceRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
@@ -388,7 +349,7 @@ async fn contract_describe_table() {
     let config = make_config();
     metadata_api::describe_table(
         &config,
-        "ns_with_tables.table_alpha",
+        "x",
         models::DescribeTableRequest::new(),
         None,
         None,
@@ -404,8 +365,8 @@ async fn contract_describe_table_index_stats() {
     let config = make_config();
     index_api::describe_table_index_stats(
         &config,
-        "test_ns.test_table",
-        "idx",
+        "x",
+        "x",
         models::DescribeTableIndexStatsRequest::new(),
         None,
     )
@@ -418,7 +379,7 @@ async fn contract_describe_table_version() {
     let config = make_config();
     metadata_api::describe_table_version(
         &config,
-        "test_ns.test_table",
+        "x",
         models::DescribeTableVersionRequest::new(),
         None,
     )
@@ -431,7 +392,7 @@ async fn contract_describe_transaction() {
     let config = make_config();
     metadata_api::describe_transaction(
         &config,
-        "test_txn",
+        "x",
         models::DescribeTransactionRequest::new(),
         None,
     )
@@ -442,20 +403,15 @@ async fn contract_describe_transaction() {
 #[tokio::test]
 async fn contract_drop_namespace() {
     let config = make_config();
-    metadata_api::drop_namespace(
-        &config,
-        "ns_existing",
-        models::DropNamespaceRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    metadata_api::drop_namespace(&config, "x", models::DropNamespaceRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_drop_table() {
     let config = make_config();
-    metadata_api::drop_table(&config, "test_ns.test_table", None)
+    metadata_api::drop_table(&config, "x", None)
         .await
         .expect("contract violation: stub returned non-2xx or transport error");
 }
@@ -463,7 +419,7 @@ async fn contract_drop_table() {
 #[tokio::test]
 async fn contract_drop_table_index() {
     let config = make_config();
-    index_api::drop_table_index(&config, "test_ns.test_table", "idx", None)
+    index_api::drop_table_index(&config, "x", "x", None)
         .await
         .expect("contract violation: stub returned non-2xx or transport error");
 }
@@ -473,13 +429,10 @@ async fn contract_explain_table_query_plan() {
     let config = make_config();
     data_api::explain_table_query_plan(
         &config,
-        "test_ns.test_table",
+        "x",
         models::ExplainTableQueryPlanRequest::new(models::QueryTableRequest::new(
-            1i32,
-            models::QueryTableRequestVector {
-                single_vector: Some(vec![0.1f32]),
-                ..Default::default()
-            },
+            0i32,
+            models::QueryTableRequestVector::new(),
         )),
         None,
     )
@@ -490,14 +443,9 @@ async fn contract_explain_table_query_plan() {
 #[tokio::test]
 async fn contract_get_table_stats() {
     let config = make_config();
-    metadata_api::get_table_stats(
-        &config,
-        "test_ns.test_table",
-        models::GetTableStatsRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    metadata_api::get_table_stats(&config, "x", models::GetTableStatsRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
@@ -505,8 +453,8 @@ async fn contract_get_table_tag_version() {
     let config = make_config();
     metadata_api::get_table_tag_version(
         &config,
-        "test_ns.test_table",
-        models::GetTableTagVersionRequest::new("v1".to_string()),
+        "x",
+        models::GetTableTagVersionRequest::new("x".to_string()),
         None,
     )
     .await
@@ -516,7 +464,7 @@ async fn contract_get_table_tag_version() {
 #[tokio::test]
 async fn contract_insert_into_table() {
     let config = make_config();
-    data_api::insert_into_table(&config, "test_ns.test_table", vec![], None, None)
+    data_api::insert_into_table(&config, "x", vec![], None, None)
         .await
         .expect("contract violation: stub returned non-2xx or transport error");
 }
@@ -532,7 +480,7 @@ async fn contract_list_all_tables() {
 #[tokio::test]
 async fn contract_list_namespaces() {
     let config = make_config();
-    metadata_api::list_namespaces(&config, "$", None, None, None)
+    metadata_api::list_namespaces(&config, "x", None, None, None)
         .await
         .expect("contract violation: stub returned non-2xx or transport error");
 }
@@ -540,20 +488,15 @@ async fn contract_list_namespaces() {
 #[tokio::test]
 async fn contract_list_table_indices() {
     let config = make_config();
-    index_api::list_table_indices(
-        &config,
-        "test_ns.test_table",
-        models::ListTableIndicesRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    index_api::list_table_indices(&config, "x", models::ListTableIndicesRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_list_table_tags() {
     let config = make_config();
-    metadata_api::list_table_tags(&config, "test_ns.test_table", None, None, None)
+    metadata_api::list_table_tags(&config, "x", None, None, None)
         .await
         .expect("contract violation: stub returned non-2xx or transport error");
 }
@@ -561,7 +504,7 @@ async fn contract_list_table_tags() {
 #[tokio::test]
 async fn contract_list_table_versions() {
     let config = make_config();
-    metadata_api::list_table_versions(&config, "test_ns.test_table", None, None, None, None)
+    metadata_api::list_table_versions(&config, "x", None, None, None, None)
         .await
         .expect("contract violation: stub returned non-2xx or transport error");
 }
@@ -569,7 +512,7 @@ async fn contract_list_table_versions() {
 #[tokio::test]
 async fn contract_list_tables() {
     let config = make_config();
-    metadata_api::list_tables(&config, "ns_with_tables", None, None, None, None)
+    metadata_api::list_tables(&config, "x", None, None, None, None)
         .await
         .expect("contract violation: stub returned non-2xx or transport error");
 }
@@ -579,8 +522,8 @@ async fn contract_merge_insert_into_table() {
     let config = make_config();
     data_api::merge_insert_into_table(
         &config,
-        "test_ns.test_table",
-        "id",
+        "x",
+        "x",
         vec![],
         None,
         None,
@@ -598,14 +541,9 @@ async fn contract_merge_insert_into_table() {
 #[tokio::test]
 async fn contract_namespace_exists() {
     let config = make_config();
-    metadata_api::namespace_exists(
-        &config,
-        "ns_existing",
-        models::NamespaceExistsRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    metadata_api::namespace_exists(&config, "x", models::NamespaceExistsRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
@@ -613,14 +551,8 @@ async fn contract_query_table() {
     let config = make_config();
     let resp = data_api::query_table(
         &config,
-        "test_ns.test_table",
-        models::QueryTableRequest::new(
-            1i32,
-            models::QueryTableRequestVector {
-                single_vector: Some(vec![0.1f32]),
-                ..Default::default()
-            },
-        ),
+        "x",
+        models::QueryTableRequest::new(0i32, models::QueryTableRequestVector::new()),
         None,
     )
     .await
@@ -635,14 +567,9 @@ async fn contract_query_table() {
 #[tokio::test]
 async fn contract_refresh_materialized_view() {
     let config = make_config();
-    data_api::refresh_materialized_view(
-        &config,
-        "test_ns.test_table",
-        None,
-        Some(models::RefreshMaterializedViewRequest::new()),
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    data_api::refresh_materialized_view(&config, "x", None, None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
@@ -650,8 +577,8 @@ async fn contract_register_table() {
     let config = make_config();
     metadata_api::register_table(
         &config,
-        "test_ns.test_table",
-        models::RegisterTableRequest::new("s3://bucket/path".to_string()),
+        "x",
+        models::RegisterTableRequest::new("x".to_string()),
         None,
     )
     .await
@@ -663,8 +590,8 @@ async fn contract_rename_table() {
     let config = make_config();
     metadata_api::rename_table(
         &config,
-        "test_ns.test_table",
-        models::RenameTableRequest::new("new_name".to_string()),
+        "x",
+        models::RenameTableRequest::new("x".to_string()),
         None,
     )
     .await
@@ -674,40 +601,25 @@ async fn contract_rename_table() {
 #[tokio::test]
 async fn contract_restore_table() {
     let config = make_config();
-    metadata_api::restore_table(
-        &config,
-        "test_ns.test_table",
-        models::RestoreTableRequest::new(1i64),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    metadata_api::restore_table(&config, "x", models::RestoreTableRequest::new(0i64), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_table_exists() {
     let config = make_config();
-    metadata_api::table_exists(
-        &config,
-        "ns_with_tables.table_alpha",
-        models::TableExistsRequest::new(),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    metadata_api::table_exists(&config, "x", models::TableExistsRequest::new(), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_update_table() {
     let config = make_config();
-    data_api::update_table(
-        &config,
-        "test_ns.test_table",
-        models::UpdateTableRequest::new(vec![]),
-        None,
-    )
-    .await
-    .expect("contract violation: stub returned non-2xx or transport error");
+    data_api::update_table(&config, "x", models::UpdateTableRequest::new(vec![]), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
@@ -715,7 +627,7 @@ async fn contract_update_table_schema_metadata() {
     let config = make_config();
     metadata_api::update_table_schema_metadata(
         &config,
-        "test_ns.test_table",
+        "x",
         std::collections::HashMap::new(),
         None,
     )
@@ -728,8 +640,8 @@ async fn contract_update_table_tag() {
     let config = make_config();
     metadata_api::update_table_tag(
         &config,
-        "test_ns.test_table",
-        models::UpdateTableTagRequest::new("v1".to_string(), 2i64),
+        "x",
+        models::UpdateTableTagRequest::new("x".to_string(), 0i64),
         None,
     )
     .await
